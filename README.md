@@ -1,7 +1,7 @@
 
 # Overview
 
-This repository contains the code for the paper [**Single-Stage 6D Object Pose Estimation**](https://arxiv.org/abs/1911.08324).
+This repository contains the code for the paper [**Single-Stage 6D Object Pose Estimation**](https://arxiv.org/abs/1911.08324). Yinlin Hu, Pascal Fua, Wei Wang and Mathieu Salzmann. CVPR 2020.
 
 Most recent 6D pose estimation frameworks first rely on a deep network to establish correspondences between 3D object keypoints and 2D image locations and then use a variant of a RANSAC-based Perspective-n-Point (PnP) algorithm. This two-stage process, however, is suboptimal: First,  it is not end-to-end trainable. Second, training the deep network relies on a surrogate loss that does not directly reflect the final 6D pose estimation task.
 
@@ -9,7 +9,7 @@ In this work, we introduce a deep architecture that directly regresses 6D poses 
 
 ![](./images/moti.png)
 
-Figure 1: Motivation. Consider the modern 6D pose estimation algorithm of~\cite{Hu19a} that uses a deep network to predict several 2D correspondences for each of the eight 3D corners of the pitcher's bounding box. (a) Because it minimizes the average 2D error of these correspondences, two instances of such a framework could produce correspondences that differ but have the same average accuracy, such as the green and the red ones. As evidenced by the projected green and red reference frames, applying a RANSAC-based PnP algorithm to these two sets of correspondences can yield substantially different poses. (b) Even when using only the set of green correspondences, simply changing their order causes a RANSAC-based PnP algorithm to return different solutions.
+Figure 1: Motivation. Consider the modern 6D pose estimation algorithm of [SegDrivenPose](https://arxiv.org/abs/1812.02541) that uses a deep network to predict several 2D correspondences for each of the eight 3D corners of the pitcher's bounding box. (a) Because it minimizes the average 2D error of these correspondences, two instances of such a framework could produce correspondences that differ but have the same average accuracy, such as the green and the red ones. As evidenced by the projected green and red reference frames, applying a RANSAC-based PnP algorithm to these two sets of correspondences can yield substantially different poses. (b) Even when using only the set of green correspondences, simply changing their order causes a RANSAC-based PnP algorithm to return different solutions.
 
 ![](./images/arch.png)
 

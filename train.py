@@ -51,7 +51,7 @@ def quaternion2rotation(quat):
 
     return torch.stack((m0, m1, m2, m3, m4, m5, m6, m7, m8), dim=1).view(-1, 3, 3)
 
-def compute_loss(intrinsic, pt_3d, predQ, predT, gtQ, gtT):
+def compute_loss(pt_3d, predQ, predT, gtQ, gtT):
     q1 = predQ
     t1 = predT
     q2 = gtQ
@@ -59,21 +59,10 @@ def compute_loss(intrinsic, pt_3d, predQ, predT, gtQ, gtT):
     r1 = quaternion2rotation(q1)
     r2 = quaternion2rotation(q2)
     # 
-    # compute error in 2D reprojection
+    # compute error in 3D
     res1 = torch.bmm(r1, pt_3d.transpose(1, 2)) + t1.unsqueeze(dim=2)
     res2 = torch.bmm(r2, pt_3d.transpose(1, 2)) + t2.unsqueeze(dim=2)
-    # 
-    res1 = torch.bmm(intrinsic, res1)
-    res2 = torch.bmm(intrinsic, res2)
-    # 
-    res1x = res1[:,0,:] / res1[:,2,:]
-    res1y = res1[:,1,:] / res1[:,2,:]
-    res2x = res2[:,0,:] / res2[:,2,:]
-    res2y = res2[:,1,:] / res2[:,2,:]
-    # 
-    res1 = torch.cat((res1x.unsqueeze(-1), res1y.unsqueeze(-1)), dim=-1)
-    res2 = torch.cat((res2x.unsqueeze(-1), res2y.unsqueeze(-1)), dim=-1)
-    # 
+
     diff = (res1-res2).norm(dim=1).mean(dim=1)
     return diff.mean()
 
@@ -155,7 +144,7 @@ def train():
             maxT = translation_max.type_as(out).view(-1,3)
             predT =  (predT + 0.5) * (maxT - minT) + minT
 
-            loss = alpha * compute_loss(intrinsic, p3d, predQ, predT, quat, trans)
+            loss = alpha * compute_loss(p3d, predQ, predT, quat, trans)
 
             loss.backward()
             optimizer.step()

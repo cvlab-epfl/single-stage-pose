@@ -132,6 +132,6 @@ if __name__ == "__main__":
                 err = pose_err_2d(p3ds[i].numpy(), R2, T2, gtR, gtT, k)
                 err_2d_stat_opencv_ours.append(err)
 
-        print("%d\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f" % (noise, np.array(err_3d_stat_opencv_epnp).mean(), np.array(err_3d_stat_opencv_ours).mean(), np.array(err_2d_stat_opencv_epnp).mean(), np.array(err_2d_stat_opencv_ours).mean()))
+        print("%d\t%.3f\t\t%.3f\t\t%.3f\t\t%.3f" % (noise, np.array(err_3d_stat_opencv_epnp).mean(), np.array(err_3d_stat_opencv_ours).mean(), np.array(err_2d_stat_opencv_epnp).mean(), np.array(err_2d_stat_opencv_ours).mean()))
 
 

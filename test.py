@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     min_noise = 0
     max_noise = 31
-    print("Noise\tEPnP\tOurs")
+    print("Noise\tEPnP(3d)\tOurs(3d)\tEPnP(2d)\tOurs(2d)")
     # 
     for noise in range(min_noise, max_noise):
         dataset = PnP_Data_Simulator(sampleCnt=2000, minNoiseSigma=noise, maxNoiseSigma=noise, minOutlier=0.1, maxOutlier=0.1)
@@ -95,8 +95,11 @@ if __name__ == "__main__":
         translation_max = torch.FloatTensor(dataset.translation_max)
 
         # pbar = tqdm.tqdm(enumerate(data_loader), total=len(data_loader))  # progress bar
-        err_stat_opencv_epnp = []
-        err_stat_opencv_ours = []
+        err_3d_stat_opencv_epnp = []
+        err_3d_stat_opencv_ours = []
+        # 
+        err_2d_stat_opencv_epnp = []
+        err_2d_stat_opencv_ours = []
 
         # for batch_idx, batch_data in pbar:
         for batch_idx, batch_data in enumerate(data_loader):  
@@ -118,13 +121,17 @@ if __name__ == "__main__":
 
                 R1, T1 = PnP_OpenCV_EPNP(p3d, p2d, k)
                 err = pose_err_3d(p3ds[i].numpy(), R1, T1, gtR, gtT)
-                err_stat_opencv_epnp.append(err)
+                err_3d_stat_opencv_epnp.append(err)
+                err = pose_err_2d(p3ds[i].numpy(), R1, T1, gtR, gtT, k)
+                err_2d_stat_opencv_epnp.append(err)
 
                 R2, T2 = PnP_Learning(p3ds[i].numpy(), sxy[i].numpy(), dxy[i].numpy(), k, dataset.width, dataset.height, \
                     translation_min, translation_max, model=model)
                 err = pose_err_3d(p3ds[i].numpy(), R2, T2, gtR, gtT)
-                err_stat_opencv_ours.append(err)
+                err_3d_stat_opencv_ours.append(err)
+                err = pose_err_2d(p3ds[i].numpy(), R2, T2, gtR, gtT, k)
+                err_2d_stat_opencv_ours.append(err)
 
-        print("%d\t%.5f\t%.5f" % (noise, np.array(err_stat_opencv_epnp).mean(), np.array(err_stat_opencv_ours).mean()))
+        print("%d\t%.5f\t\t%.5f\t\t%.5f\t\t%.5f" % (noise, np.array(err_3d_stat_opencv_epnp).mean(), np.array(err_3d_stat_opencv_ours).mean(), np.array(err_2d_stat_opencv_epnp).mean(), np.array(err_2d_stat_opencv_ours).mean()))
 
 

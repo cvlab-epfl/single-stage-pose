@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     min_noise = 0
     max_noise = 31
-    print("Noise\tEPnP(3d)\tOurs(3d)\tEPnP(2d)\tOurs(2d)")
+    print("Noise\tEPnP(2d)\tOurs(2d)\tEPnP(3d)\tOurs(3d)")
     # 
     for noise in range(min_noise, max_noise):
         dataset = PnP_Data_Simulator(sampleCnt=2000, minNoiseSigma=noise, maxNoiseSigma=noise, minOutlier=0.1, maxOutlier=0.1)
@@ -132,6 +132,6 @@ if __name__ == "__main__":
                 err = pose_err_2d(p3ds[i].numpy(), R2, T2, gtR, gtT, k)
                 err_2d_stat_opencv_ours.append(err)
 
-        print("%d\t%.3f\t\t%.3f\t\t%.3f\t\t%.3f" % (noise, np.array(err_3d_stat_opencv_epnp).mean(), np.array(err_3d_stat_opencv_ours).mean(), np.array(err_2d_stat_opencv_epnp).mean(), np.array(err_2d_stat_opencv_ours).mean()))
+        print("%d\t%.3f\t\t%.3f\t\t%.3f\t\t%.3f" % (noise, np.array(err_2d_stat_opencv_epnp).mean(), np.array(err_2d_stat_opencv_ours).mean(), np.array(err_3d_stat_opencv_epnp).mean(), np.array(err_3d_stat_opencv_ours).mean()))
 
 
